@@ -83,12 +83,13 @@ func weightedOrder(srvs []*net.SRV) map[int]*net.SRV {
 	// Whilst there are still entries to be ordered
 	l := len(srvs)
 	for l > 0 {
-		rw := rand.Intn(tw)
 		i := rand.Intn(l)
 		s := srvs[i]
-		// Greater the weight the more likely this will be zero or less
-		//fmt.Fprintf(os.Stderr, "rw: %d\n", rw)
-		rw = rw - int(s.Weight)
+		var rw int
+		if tw > 0 {
+			// Greater the weight the more likely this will be zero or less
+			rw = rand.Intn(tw) - int(s.Weight)
+		}
 		if rw <= 0 {
 			// Put entry in position
 			osrv[o] = s

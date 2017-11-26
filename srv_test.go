@@ -23,7 +23,7 @@ func TestOrderSRV(t *testing.T) {
 		Target:   "t13",
 		Port:     1234,
 		Priority: 1,
-		Weight:   100,
+		Weight:   20,
 	}
 	srv21 := net.SRV{
 		Target:   "t21",
