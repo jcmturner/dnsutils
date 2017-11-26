@@ -1,6 +1,7 @@
 package dnsutils
 
 import (
+	"github.com/stretchr/testify/assert"
 	"net"
 	"testing"
 )
@@ -16,7 +17,13 @@ func TestOrderSRV(t *testing.T) {
 		Target:   "t12",
 		Port:     1234,
 		Priority: 1,
-		Weight:   101,
+		Weight:   100,
+	}
+	srv13 := net.SRV{
+		Target:   "t13",
+		Port:     1234,
+		Priority: 1,
+		Weight:   100,
 	}
 	srv21 := net.SRV{
 		Target:   "t21",
@@ -26,11 +33,10 @@ func TestOrderSRV(t *testing.T) {
 	}
 
 	addrs := []*net.SRV{
-		&srv11, &srv21, &srv12,
+		&srv11, &srv21, &srv12, &srv13,
 	}
-	index, orderedSRV := orderSRV(addrs)
-	for _, i := range index {
-		srv := orderedSRV[i]
-		t.Logf("PRIO: %d WEIGHT: %d TARGET: %s", srv.Priority, srv.Weight, srv.Target)
-	}
+	count, orderedSRV := orderSRV(addrs)
+	assert.Equal(t, len(addrs), count, "Index not the expected size")
+	assert.Equal(t, len(addrs), len(orderedSRV), "orderedSRV not the expected size")
+	assert.Equal(t, uint16(2), orderedSRV[4].Priority, "Priority order not as expected")
 }
