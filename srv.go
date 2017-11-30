@@ -1,8 +1,11 @@
 package dnsutils
 
 import (
+	"context"
+	"fmt"
 	"math/rand"
 	"net"
+	"os"
 	"sort"
 )
 
@@ -18,13 +21,39 @@ import (
 //   // Do something such as dial this SRV. If fails move on the the next or break if it succeeds.
 //   i += 1
 // }
+//
+// To override the operating system's name server set the DNSUTILS_OVERRIDE_NS environment variable.
+// The override should also include the port. For example 127.0.0.1:53
 func OrderedSRV(service, proto, name string) (int, map[int]*net.SRV, error) {
-	_, addrs, err := net.LookupSRV(service, proto, name)
+	var addrs []*net.SRV
+	var err error
+	ns := os.Getenv("DNSUTILS_OVERRIDE_NS")
+	if ns != "" {
+		res := net.Resolver{Dial: overrideNS}
+		_, addrs, err = res.LookupSRV(context.Background(), service, proto, name)
+	} else {
+		_, addrs, err = net.LookupSRV(service, proto, name)
+	}
 	if err != nil {
 		return 0, make(map[int]*net.SRV), err
 	}
 	index, osrv := orderSRV(addrs)
 	return index, osrv, nil
+}
+
+func overrideNS(ctx context.Context, network, address string) (conn net.Conn, err error) {
+	// Ignore the address provided and override with an environment variable if it is defined
+	ns := os.Getenv("DNSUTILS_OVERRIDE_NS")
+	if ns != "" {
+		address = ns
+	}
+	if network == "tcp" || network == "udp" {
+		var d net.Dialer
+		conn, err = d.DialContext(ctx, network, address)
+		return
+	}
+	err = fmt.Errorf("unsupported network protocol %s for DNS lookup", network)
+	return
 }
 
 func orderSRV(addrs []*net.SRV) (int, map[int]*net.SRV) {
