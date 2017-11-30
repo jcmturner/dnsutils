@@ -25,13 +25,16 @@ func (s SRVRecords) Less(i, j int) bool {
 	return s[i].Priority < s[j].Priority
 }
 
-// OrderedSRV returns a sorted int slice for the entries in the map. To use in the correct order:
+// OrderedSRV returns a count of the results and a map keyed on the order they should be used.
+// This based on the records' priority and randomised selection based on their relative weighting.
+// The function's inputs are the same as those for net.LookupSRV
+// To use in the correct order:
 //
-// count, orderedSRV, err := OrderedSRV(addrs)
+// count, orderedSRV, err := OrderedSRV(service, proto, name)
 // i := 1
 // for  i <= count {
 //   srv := orderedSRV[i]
-//   // Do something such as dial this SRV. If fails move on the the next
+//   // Do something such as dial this SRV. If fails move on the the next or break if it succeeds.
 //   i += 1
 // }
 //
