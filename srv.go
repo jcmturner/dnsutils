@@ -9,22 +9,6 @@ import (
 	"sort"
 )
 
-type SRVRecords []*net.SRV
-
-func (s SRVRecords) Len() int {
-	return len(s)
-}
-func (s SRVRecords) Swap(i, j int) {
-	s[i], s[j] = s[j], s[i]
-}
-func (s SRVRecords) Less(i, j int) bool {
-	// Order on priority and then on weighted random
-	if s[i].Priority == s[j].Priority {
-
-	}
-	return s[i].Priority < s[j].Priority
-}
-
 // OrderedSRV returns a count of the results and a map keyed on the order they should be used.
 // This based on the records' priority and randomised selection based on their relative weighting.
 // The function's inputs are the same as those for net.LookupSRV
