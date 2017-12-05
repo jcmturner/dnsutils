@@ -66,11 +66,10 @@ func orderSRV(addrs []*net.SRV) (int, map[int]*net.SRV) {
 		prioMap[int(srv.Priority)] = append(prioMap[int(srv.Priority)], srv)
 	}
 
-	priorities := make([]int, 0)
-	for p, _ := range prioMap {
+	priorities := make([]int, len(prioMap))
+	for p := range prioMap {
 		priorities = append(priorities, p)
 	}
-	sort.Ints(priorities)
 
 	var count int
 	sort.Ints(priorities)
@@ -78,6 +77,7 @@ func orderSRV(addrs []*net.SRV) (int, map[int]*net.SRV) {
 		tos := weightedOrder(prioMap[p])
 		for i, s := range tos {
 			count += 1
+			fmt.Fprintf(os.Stderr, "count: %d srv: %v", count, s)
 			osrv[o+i] = s
 		}
 		o += len(tos)
