@@ -5,6 +5,8 @@ package dnsutils
 
 import (
 	"github.com/stretchr/testify/assert"
+	"strconv"
+	"strings"
 	"testing"
 )
 
@@ -26,7 +28,8 @@ func TestResolveKDC(t *testing.T) {
 	for _, s := range expected {
 		var found bool
 		for _, v := range res {
-			if s == v {
+			srvStr := strings.TrimRight(v.Target, ".") + ":" + strconv.Itoa(int(v.Port))
+			if s == srvStr {
 				found = true
 				break
 			}
