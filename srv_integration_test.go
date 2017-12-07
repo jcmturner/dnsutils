@@ -3,7 +3,10 @@
 
 package dnsutils
 
-import "github.com/stretchr/testify/assert"
+import (
+	"github.com/stretchr/testify/assert"
+	"testing"
+)
 
 func TestResolveKDC(t *testing.T) {
 	count, res, err := OrderedSRV("kerberos", "tcp", "test.gokrb5")
