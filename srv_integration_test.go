@@ -11,7 +11,7 @@ import (
 )
 
 func TestResolveKDC(t *testing.T) {
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 1; i++ {
 		count, res, err := OrderedSRV("kerberos", "tcp", "test.gokrb5")
 		if err != nil {
 			t.Errorf("error resolving SRV DNS records: %v", err)
