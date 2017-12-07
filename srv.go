@@ -34,12 +34,12 @@ func orderSRV(addrs []*net.SRV) (int, map[int]*net.SRV) {
 	var o int
 	osrv := make(map[int]*net.SRV)
 
-	prioMap := make(map[int][]*net.SRV)
+	prioMap := make(map[int][]*net.SRV, 0)
 	for _, srv := range addrs {
 		prioMap[int(srv.Priority)] = append(prioMap[int(srv.Priority)], srv)
 	}
 
-	priorities := make([]int, len(prioMap))
+	priorities := make([]int, 0)
 	for p := range prioMap {
 		priorities = append(priorities, p)
 	}
