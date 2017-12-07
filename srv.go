@@ -47,6 +47,7 @@ func orderSRV(addrs []*net.SRV) (int, map[int]*net.SRV) {
 	var count int
 	sort.Ints(priorities)
 	for _, p := range priorities {
+		fmt.Fprintf(os.Stderr, "priority: %v\n", p)
 		tos := weightedOrder(prioMap[p])
 		for i, s := range tos {
 			fmt.Fprintf(os.Stderr, "srv: %v\n", s.Target)
