@@ -1,10 +1,8 @@
 package dnsutils
 
 import (
-	"fmt"
 	"math/rand"
 	"net"
-	"os"
 	"sort"
 )
 
@@ -47,10 +45,8 @@ func orderSRV(addrs []*net.SRV) (int, map[int]*net.SRV) {
 	var count int
 	sort.Ints(priorities)
 	for _, p := range priorities {
-		fmt.Fprintf(os.Stderr, "priority: %v\n", p)
 		tos := weightedOrder(prioMap[p])
 		for i, s := range tos {
-			fmt.Fprintf(os.Stderr, "srv: %v\n", s.Target)
 			count += 1
 			osrv[o+i] = s
 		}
