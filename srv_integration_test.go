@@ -16,7 +16,7 @@ func TestResolveKDC(t *testing.T) {
 		if err != nil {
 			t.Errorf("error resolving SRV DNS records: %v", err)
 		}
-		assert.Equal(t, 5, count, "Number of SRV records not as expected: %v", res)
+		assert.Equal(t, 6, count, "Number of SRV records not as expected: %v", res)
 		assert.Equal(t, count, len(res), "Map size does not match: %v", res)
 		expected := []string{
 			"kdc.test.gokrb5:88",
