@@ -1,9 +1,9 @@
 language: go
 
 go:
-  - 1.7.x
-  - 1.8.x
-  - 1.9.x
+  - 1.10.x
+  - 1.11.x
+  - 1.12.x
   - master
 
 gobuild_args: -tags=integration -race
@@ -15,7 +15,7 @@ services:
 
 before_install:
   - docker pull jcmturner/gokrb5:dns
-  - docker run -d -h kdc.test.gokrb5 -v /etc/localtime:/etc/localtime:ro -e "TEST_KDC_ADDR=127.0.0.1" -p 53:53 -p 53:53/udp --name dns jcmturner/gokrb5:dns
+  - docker run -d -h kdc.test.gokrb5 -v /etc/localtime:/etc/localtime:ro -e "TEST_KDC_ADDR=127.0.0.1" -e "TEST_HTTP_ADDR=127.0.0.1" -p 53:53 -p 53:53/udp --name dns jcmturner/gokrb5:dns
 
 before_script:
   - sudo sed -i 's/nameserver .*/nameserver 127.0.0.1/g' /etc/resolv.conf
