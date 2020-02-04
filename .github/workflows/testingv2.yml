@@ -38,10 +38,19 @@ jobs:
           go vet ./...
         id: govet
 
+      - name: Start integration test dependencies
+        run: |
+          sudo docker run -d -h ns.test.gokrb5 -v /etc/localtime:/etc/localtime:ro -e "TEST_KDC_ADDR=${TEST_KDC_ADDR}" -e "TEST_HTTP_ADDR=${TEST_HTTP_ADDR}" -p ${DNSUTILS_OVERRIDE_NS}:53 -p ${DNSUTILS_OVERRIDE_NS}:53/udp --name dns jcmturner/gokrb5:dns
+          sudo sed -i 's/nameserver .*/nameserver '${DNS_IP}'/g' /etc/resolv.conf
+          dig _kerberos._udp.TEST.GOKRB5
+        id: intgTestDeps
+
       - name: Unit tests
         run: |
           cd ${GITHUB_WORKFLOW}
           go test -race ./...
+        env:
+          INTEGRATION: 1
         id: unitTests
 
       - name: Unit tests (32bit)
@@ -50,4 +59,5 @@ jobs:
           go test ./...
         env:
           GOARCH: 386
+          INTEGRATION: 1
         id: unitTest32

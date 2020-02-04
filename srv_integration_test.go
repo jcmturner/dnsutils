@@ -1,16 +1,17 @@
-// +build integration
-// To turn on this test use -tags=integration in go test command
-
 package dnsutils
 
 import (
 	"github.com/stretchr/testify/assert"
+	"os"
 	"strconv"
 	"strings"
 	"testing"
 )
 
 func TestResolveKDC(t *testing.T) {
+	if os.Getenv("INTEGRATION") != "1" {
+		t.Skip("Skipping integration test")
+	}
 	for i := 0; i < 100; i++ {
 		count, res, err := OrderedSRV("kerberos", "tcp", "test.gokrb5")
 		if err != nil {
