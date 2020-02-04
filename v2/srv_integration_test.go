@@ -10,7 +10,7 @@ import (
 
 func TestResolveKDC(t *testing.T) {
 	if os.Getenv("INTEGRATION") != "1" {
-		t.Skip("Skipping integration test")
+		t.Skip("Skipping integration test.")
 	}
 	for i := 0; i < 100; i++ {
 		count, res, err := OrderedSRV("kerberos", "tcp", "test.gokrb5")
